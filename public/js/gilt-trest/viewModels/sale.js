@@ -7,7 +7,7 @@ var angular = require('angular');
 var saleController = function saleController ($scope) {
   // $scope.sale made avalible by storeController scope
 
-  debugger;
+  console.log('saleController:', $scope.sale);
 
   var sale = $scope.sale;
 

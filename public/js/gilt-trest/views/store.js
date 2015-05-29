@@ -11,6 +11,7 @@ var storeController = function storeController ($scope, $routeParams, apiRequest
 
   apiRequest.storeView($scope.storeKey).then(function (data) {
   	$scope.saleCollection = data;
+    console.log('storeController: ', $scope.saleCollection);
   });
 
   // $scope.saleCollection = data;

@@ -65,8 +65,8 @@ module.exports = angular.module('request', [])
         url : url
       })
       .success(function (resp) {
-        $log.debug(resp.data.sales);
-        return resp.data.sales;
+        $log.debug(resp.sales);
+        return resp.sales;
       });
     }
 
@@ -78,8 +78,8 @@ module.exports = angular.module('request', [])
         url : url
       })
       .success(function (resp) {
-        $log(resp.data);
-        return resp.data;
+        $log(resp);
+        return resp;
       });
     }
 

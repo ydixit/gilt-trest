@@ -16,7 +16,7 @@ var saleCollectionDirective = function saleCollectionDirective () {
 };
 
 var saleCollectionController = function saleCollectionController ($scope) {
-	console.log($scope.saleCollection);
+	console.log('saleCollectionCtrl: ', $scope.saleCollection);
 };
 
 module.exports = angular.module('saleCollection', [require('./sale').name])

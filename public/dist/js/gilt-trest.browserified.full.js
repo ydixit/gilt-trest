@@ -29222,8 +29222,8 @@ module.exports = angular.module('request', [])
         url : url
       })
       .success(function (resp) {
-        $log.debug(resp.data.sales);
-        return resp.data.sales;
+        $log.debug(resp.sales);
+        return resp.sales;
       });
     }
 
@@ -29235,8 +29235,8 @@ module.exports = angular.module('request', [])
         url : url
       })
       .success(function (resp) {
-        $log(resp.data);
-        return resp.data;
+        $log(resp);
+        return resp;
       });
     }
 
@@ -29262,7 +29262,7 @@ var angular = require('angular');
 var saleController = function saleController ($scope) {
   // $scope.sale made avalible by storeController scope
 
-  debugger;
+  console.log('saleController:', $scope.sale);
 
   var sale = $scope.sale;
 
@@ -29309,7 +29309,7 @@ var saleCollectionDirective = function saleCollectionDirective () {
 };
 
 var saleCollectionController = function saleCollectionController ($scope) {
-	console.log($scope.saleCollection);
+	console.log('saleCollectionCtrl: ', $scope.saleCollection);
 };
 
 module.exports = angular.module('saleCollection', [require('./sale').name])
@@ -29362,6 +29362,7 @@ var storeController = function storeController ($scope, $routeParams, apiRequest
 
   apiRequest.storeView($scope.storeKey).then(function (data) {
   	$scope.saleCollection = data;
+    console.log('storeController: ', $scope.saleCollection);
   });
 
   // $scope.saleCollection = data;
