@@ -7,3 +7,6 @@ GET      /sales/:store            controllers.Sales.getByStore(store: String)
 POST     /sales/:sale_key/pin     controllers.Sales.postPinBySaleKey(sale_key: String)
 POST     /users/register          controllers.Users.postRegister()
 POST     /users/login             controllers.Users.postLogin()
+
+GET     /                         controllers.Application.index
+GET     /assets/*file             controllers.Assets.at(path="/public", file)
