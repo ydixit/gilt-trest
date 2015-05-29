@@ -18,7 +18,7 @@ module.exports = angular.module('login', [
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/login', {
-    templateUrl: '/templates/views/login.html',
+    templateUrl: 'assets//templates/views/login.html',
     controller: 'loginCtrl'
   });
 }]);

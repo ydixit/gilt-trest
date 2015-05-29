@@ -107,4 +107,4 @@ gulp.task('uglify-modularized-js', function() {
 });
 
 
-gulp.task('js', ['lint-js', 'bundle-modularized-js', 'bundle-browserified-js', 'uglify-browserified-js', 'uglify-modularized-js']);
+gulp.task('js', ['lint-js'/*, 'bundle-modularized-js'*/, 'bundle-browserified-js', 'uglify-browserified-js'/*, 'uglify-modularized-js'*/]);

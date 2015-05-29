@@ -2,23 +2,24 @@
 
 var angular = require('angular');
 
-var urlBase = '/api';
+var userUrlBase = '/users';
+var saleUrlBase = '/sales';
 
 module.exports = angular.module('request', [])
   .service('apiRequest', function($http, $log, $location) {
-
+    $http.defaults.headers.common.username = 'kyle';
     function login (userForm) {
-      var url = urlBase + '/users/login';
+      var url = userUrlBase + '/login';
 
       return $http({
         method: 'POST',
         url : url,
         body : userForm
       })
-      .success(function (userObject) {
-        $log.debug(userObject);
-        $http.defaults.headers.common.username = userObject.username;
-        $location.path('/sale/women');
+      .success(function (resp) {
+        $log.debug(resp.data);
+        $http.defaults.headers.common.username = resp.data.username;
+        $location.path('/sales/women');
       })
       .error(function (error) {
         $log.debug(error);
@@ -26,30 +27,30 @@ module.exports = angular.module('request', [])
     }
 
     function register (userObject) {
-      var url = urlBase + '/users/register';
+      var url = userUrlBase + '/register';
 
       return $http({
         method: 'POST',
         url : url,
         body : userObject
       })
-      .success(function (userObject) {
-        $log.debug(userObject);
-        $http.defaults.headers.common.username = userObject.username;
-        $location.path('/sale/women');
+      .success(function (resp) {
+        $log.debug(resp.data);
+        $http.defaults.headers.common.username = resp.data.username;
+        $location.path(saleUrlBase + '/women');
       });
     }
 
     function storeView (storeKey) {
-      var url = urlBase + '/sale/' + storeKey;
+      var url = saleUrlBase + '/' + storeKey;
 
       return $http({
         method: 'GET',
         url : url
       })
-      .success(function (saleCollection) {
-        $log.debug(saleCollection);
-        return saleCollection;
+      .success(function (resp) {
+        $log.debug(resp);
+        return resp.sales;
       })
       .error(function (error) {
         $log.debug(error);
@@ -57,28 +58,28 @@ module.exports = angular.module('request', [])
     }
 
     function pinList () {
-      var url = urlBase + '/sale/pinned';
+      var url = saleUrlBase + '/pinned';
 
       return $http({
         method: 'GET',
         url : url
       })
-      .success(function (saleCollection) {
-        $log.debug(saleCollection);
-        return saleCollection;
+      .success(function (resp) {
+        $log.debug(resp.data.sales);
+        return resp.data.sales;
       });
     }
 
     function pinSale (saleKey) {
-      var url = urlBase + '/sale/' + saleKey + '/pin';
+      var url = saleUrlBase + '/' + saleKey + '/pin';
 
       return $http({
         method: 'POST',
         url : url
       })
-      .success(function (saleObject) {
-        $log(saleObject);
-        return saleObject;
+      .success(function (resp) {
+        $log(resp.data);
+        return resp.data;
       });
     }
 

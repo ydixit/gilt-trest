@@ -11,15 +11,15 @@ var saleCollectionDirective = function saleCollectionDirective () {
     scope: {
       saleCollection: '='
     },
-    templateUrl : 'templates/directive_partials/sale_collection.html'
+    templateUrl : '/assets/templates/directive_partials/sale_list.html'
   };
 };
 
 var saleCollectionController = function saleCollectionController ($scope) {
-	console.log('saleCollection');
+	console.log($scope.saleCollection);
 };
 
-module.exports = angular.module('saleCollection', [require('./sale')])
+module.exports = angular.module('saleCollection', [require('./sale').name])
 
 .controller('saleCollectionCtrl', ['$scope', saleCollectionController])
 

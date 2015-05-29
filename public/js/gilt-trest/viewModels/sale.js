@@ -6,6 +6,9 @@ var angular = require('angular');
 
 var saleController = function saleController ($scope) {
   // $scope.sale made avalible by storeController scope
+
+  debugger;
+
   var sale = $scope.sale;
 
   $scope.pinIt = function pinIt (ev) {
@@ -20,7 +23,7 @@ var saleDirective = function saleDirective () {
     scope: {
       sale: '='
     },
-    templateUrl : 'templates/directive_partials/sale.html'
+    templateUrl : '/assets/templates/directive_partials/sale.html'
   };
 };
 

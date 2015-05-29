@@ -12,7 +12,7 @@ gulp.task('watch', function() {
   gulp.watch(JS_BASE_FILE, ['js'/*, 'mochify-phantomjs'*/]);
   gulp.watch(JS_SOURCE_FILES, ['js']);
   gulp.watch(LESS_SOURCE_FILES, ['less']);
-  gulp.watch(CSS_PAGE_BASE_FILE, ['less-page']);
+  // gulp.watch(CSS_PAGE_BASE_FILE, ['less-page']);
   // gulp.watch(SPEC_SOURCE_FILES, ['mochify']);
 
 });
