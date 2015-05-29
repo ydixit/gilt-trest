@@ -1,0 +1,100 @@
+{
+  "imports" : [
+    {
+      "uri" : "http://www.apidoc.me/gilt/gilt-public-api/1.0.0/service.json"
+    }
+  ],
+  "name" : "gilt-trest",
+  "description" : "Gilt-trest Intern Starter Project API",
+  "apidoc": {
+    "version": "0.9.12"
+  },
+
+  "models": {
+    "user": {
+      "fields": [
+        { "name": "username", "type": "string" },
+        { "name": "email", "type": "string" }
+      ]
+    },
+
+    "user_form": {
+      "fields": [
+        { "name": "username", "type": "string" }
+      ]
+    },
+
+    "error": {
+      "fields": [
+        { "name": "error", "type": "string" }
+      ]
+    },
+
+    "sale": {
+      "fields": [
+        { "name": "sales", "type": "[com.gilt.public.api.models.sale_detail]"}
+      ]
+    }
+  },
+
+  "resources": {
+    "sale": {
+      "operations": [
+        {
+          "method" : "GET",
+          "path": "/pinned",
+          "responses": {
+            "200": {"type": "sale"}
+          }
+        },
+        {
+          "method" : "GET",
+          "path": "/:store",
+          "parameters": [
+            {
+              "name": "store",
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {"type": "sale"}
+          }
+        },
+        {
+          "method" : "POST",
+          "path": "/:sale_key/pin",
+          "responses" : {
+            "200" : { "type": "com.gilt.public.api.models.sale_detail" }
+          }
+        }
+      ]
+    },
+
+    "user": {
+      "operations": [
+        {
+          "method": "POST",
+          "path": "/register",
+          "body": {
+            "type": "user"
+          },
+          "responses": {
+            "201": { "type": "user" }
+          }
+        },
+        {
+          "method": "POST",
+          "path": "/login",
+          "body": {
+            "type": "user_form"
+          },
+          "responses": {
+            "200": { "type": "user" },
+            "404": { "type": "error" }
+          }
+        }
+      ]
+    }
+  }
+
+}
