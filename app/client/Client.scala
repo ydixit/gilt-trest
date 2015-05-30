@@ -9,6 +9,10 @@ case class Error(
                   error: String
                   )
 
+case class LoginForm(
+                      username: String
+                      )
+
 case class Sale(
                  sales: Seq[com.gilt.public.api.models.SaleDetail]
                  )
@@ -17,10 +21,6 @@ case class User(
                  username: String,
                  email: String
                  )
-
-case class UserForm(
-                     username: String
-                     )
 
 }
 
@@ -63,6 +63,16 @@ package object json {
     )
   }
 
+  implicit def jsonReadsGiltTrestLoginForm: play.api.libs.json.Reads[LoginForm] = {
+    (__ \ "username").read[String].map { x => new LoginForm(username = x) }
+  }
+
+  implicit def jsonWritesGiltTrestLoginForm: play.api.libs.json.Writes[LoginForm] = new play.api.libs.json.Writes[LoginForm] {
+    def writes(x: LoginForm) = play.api.libs.json.Json.obj(
+      "username" -> play.api.libs.json.Json.toJson(x.username)
+    )
+  }
+
   implicit def jsonReadsGiltTrestSale: play.api.libs.json.Reads[Sale] = {
     (__ \ "sales").read[Seq[com.gilt.public.api.models.SaleDetail]].map { x => new Sale(sales = x) }
   }
@@ -85,16 +95,6 @@ package object json {
       (__ \ "username").write[String] and
         (__ \ "email").write[String]
       )(unlift(User.unapply _))
-  }
-
-  implicit def jsonReadsGiltTrestUserForm: play.api.libs.json.Reads[UserForm] = {
-    (__ \ "username").read[String].map { x => new UserForm(username = x) }
-  }
-
-  implicit def jsonWritesGiltTrestUserForm: play.api.libs.json.Writes[UserForm] = new play.api.libs.json.Writes[UserForm] {
-    def writes(x: UserForm) = play.api.libs.json.Json.obj(
-      "username" -> play.api.libs.json.Json.toJson(x.username)
-    )
   }
 }
 }
@@ -151,7 +151,7 @@ class Client(
   import com.gilt.gilt.trest.v0.models.json._
   import com.gilt.public.api.models.json._
 
-  private val logger = play.api.Logger("com.gilt.gilt.trest.v0.Client")
+  private[this] val logger = play.api.Logger("com.gilt.gilt.trest.v0.Client")
 
   logger.info(s"Initializing com.gilt.gilt.trest.v0.Client for url $apiUrl")
 
@@ -199,9 +199,9 @@ class Client(
     }
 
     override def postLogin(
-                            userForm: com.gilt.gilt.trest.v0.models.UserForm
+                            loginForm: com.gilt.gilt.trest.v0.models.LoginForm
                             )(implicit ec: scala.concurrent.ExecutionContext): scala.concurrent.Future[com.gilt.gilt.trest.v0.models.User] = {
-      val payload = play.api.libs.json.Json.toJson(userForm)
+      val payload = play.api.libs.json.Json.toJson(loginForm)
 
       _executeRequest("POST", s"/users/login", body = Some(payload)).map {
         case r if r.status == 200 => _root_.com.gilt.gilt.trest.v0.Client.parseJson("com.gilt.gilt.trest.v0.models.User", r, _.validate[com.gilt.gilt.trest.v0.models.User])
@@ -318,7 +318,7 @@ trait Users {
                     )(implicit ec: scala.concurrent.ExecutionContext): scala.concurrent.Future[com.gilt.gilt.trest.v0.models.User]
 
   def postLogin(
-                 userForm: com.gilt.gilt.trest.v0.models.UserForm
+                 loginForm: com.gilt.gilt.trest.v0.models.LoginForm
                  )(implicit ec: scala.concurrent.ExecutionContext): scala.concurrent.Future[com.gilt.gilt.trest.v0.models.User]
 }
 

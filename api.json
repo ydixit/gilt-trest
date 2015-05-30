@@ -18,7 +18,7 @@
       ]
     },
 
-    "user_form": {
+    "login_form": {
       "fields": [
         { "name": "username", "type": "string" }
       ]
@@ -61,7 +61,7 @@
           }
         },
         {
-          "method" : "POST",
+          "method" : "GET",
           "path": "/:sale_key/pin",
           "responses" : {
             "200" : { "type": "com.gilt.public.api.models.sale_detail" }
@@ -86,7 +86,7 @@
           "method": "POST",
           "path": "/login",
           "body": {
-            "type": "user_form"
+            "type": "login_form"
           },
           "responses": {
             "200": { "type": "user" },
