@@ -1,9 +1,14 @@
+import com.gilt.gilt.trest.v0.models.User
+import models.UserManager
 import org.specs2.mutable._
 import org.specs2.runner._
 import org.junit.runner._
 
 import play.api.test._
 import play.api.test.Helpers._
+
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 /**
  * Add your spec here.
@@ -12,6 +17,12 @@ import play.api.test.Helpers._
  */
 @RunWith(classOf[JUnitRunner])
 class ApplicationSpec extends Specification {
+  "UserManager" should {
+    "return the user by username" in {
+      val user = Await.result(UserManager.getUserByUsername("otto"), Duration.Inf)
+      user.get.email must equalTo("otto@gilt.com")
+    }
+  }
 
   "Application" should {
 
@@ -24,7 +35,6 @@ class ApplicationSpec extends Specification {
 
       status(home) must equalTo(OK)
       contentType(home) must beSome.which(_ == "text/html")
-      contentAsString(home) must contain ("Your new application is ready.")
     }
   }
 }
