@@ -10,11 +10,11 @@ var saleController = function saleController ($scope, apiRequest) {
   $scope.pinIt = function pinIt (ev) {
 
     apiRequest.pinSale(this.sale.sale_key).then(
-    function successFn (saleResp) {
-      alert('Success! Added ' + saleResp.data.name + ' to your pin list!');
-    }, function errorFn (error) {
-      // TODO: Add error handling.
-    });
+      function successFn (saleResp) {
+        alert('Success! Added ' + saleResp.data.name + ' to your pin list!');
+      }, function errorFn (error) {
+        // TODO: Add error handling.
+      });
   };
 };
 

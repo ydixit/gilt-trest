@@ -13,7 +13,6 @@
 var gulp  = require('gulp');
 
 var browserify = require('browserify');
-var concat = require('gulp-concat');
 var debug = require('gulp-debug');
 var jshint  = require('gulp-jshint');
 var gulpprint = require('gulp-print');
@@ -27,14 +26,8 @@ var configObject = require('../config');
 var JS_BASE_FILE = configObject.js.JS_BASE_FILE;
 var JS_DEST_BROWSERIFIED_FILE = configObject.js.JS_DEST_BROWSERIFIED_FILE;
 var JS_DEST_BROWSERIFIED_MINIFIED_FILE = configObject.js.JS_DEST_BROWSERIFIED_MINIFIED_FILE;
-var JS_DEST_FULL_FILE = configObject.js.JS_DEST_FULL_FILE;
 var JS_DEST_FOLDER = configObject.js.JS_DEST_FOLDER;
-var JS_DEST_MINIFIED_FILE = configObject.js.JS_DEST_MINIFIED_FILE;
-var JS_DEST_FULL_FILE = configObject.js.JS_DEST_FULL_FILE;
 var JS_SOURCE_FILES = configObject.js.JS_SOURCE_FILES;
-
-var SOURCE_MAP = configObject.source_map;
-
 
 /**
  * Gulp task to lint all of the javascript.
@@ -62,21 +55,6 @@ gulp.task('bundle-browserified-js', function() {
     .pipe(gulpprint());
 });
 
-
-/**
- * Gulp task to bundle the javascript without
- * browserify. Just a module here.
- */
-gulp.task('bundle-modularized-js', function () {
-  return gulp.src(SOURCE_MAP)
-    .pipe(gulpprint())
-    .pipe(concat(JS_DEST_FULL_FILE, {newLine: ';'}))
-    .pipe(rename(JS_DEST_FULL_FILE))
-    .pipe(gulp.dest(JS_DEST_FOLDER))
-    .pipe(gulpprint());
-});
-
-
 /**
  * Gulp task to obfuscate the browserified javascript.
  */
@@ -92,19 +70,4 @@ gulp.task('uglify-browserified-js', function() {
     .pipe(gulpprint());
 });
 
-
-/**
- * Gulp task to obfuscate the modularized javascript.
- */
-gulp.task('uglify-modularized-js', function() {
-  return gulp.src(SOURCE_MAP)
-    .pipe(gulpprint())
-    .pipe(concat(JS_BASE_FILE, {newLine: ';'}))
-    .pipe(uglify())
-    .pipe(rename(JS_DEST_MINIFIED_FILE))
-    .pipe(gulp.dest(JS_DEST_FOLDER))
-    .pipe(gulpprint());
-});
-
-
-gulp.task('js', ['lint-js'/*, 'bundle-modularized-js'*/, 'bundle-browserified-js', 'uglify-browserified-js'/*, 'uglify-modularized-js'*/]);
+gulp.task('js', ['lint-js', 'bundle-browserified-js', /*'uglify-browserified-js'*/]);

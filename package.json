@@ -1,19 +1,23 @@
 {
-  "name": "gilt-trest-frontend",
-  "group": "gilt-trest-frontend",
+  "name": "gilt-trest",
+  "group": "gilt-trest",
   "version": "0.0.1",
   "private": true,
   "description": "Pintrest-style app for Gilt's sales",
   "repository": [
     {
       "type": "git",
-      "url": "git@github.com:gilt/gilt-trest-frontend.git"
+      "url": "git@github.com:gilt/gilt-trest-backend.git"
     }
   ],
   "contributors": [
     {
       "name": "Kyle Dorman",
       "email": "kdorman@gilt.com"
+    },
+    {
+      "name": "Kevin Li",
+      "email": "kli@gilt.com"
     }
   ],
   "author": {
@@ -39,7 +43,6 @@
     "browserify": "^9.0.3",
     "chai": "^2.1.0",
     "gulp": "^3.8.11",
-    "gulp-concat": "^2.5.2",
     "gulp-debug": "^2.0.1",
     "gulp-jshint": "^1.9.2",
     "gulp-less": "^3.0.1",

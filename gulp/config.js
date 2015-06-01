@@ -20,8 +20,7 @@ module.exports = {
   css : {
     LESS_SOURCE_FILES : './public/css/' + MODULE_NAME + '/*.less',
     LESS_BASE_FILE    : './public/css/' + MODULE_NAME + '/' + MODULE_NAME + '.less',
-    CSS_DEST_FOLDER       : './public/dist/css',
-    GH_PAGES_CSS_FILE : './css/gh_pages/gh_pages.less'
+    CSS_DEST_FOLDER       : './public/dist/css'
   },
 
   spec : {
