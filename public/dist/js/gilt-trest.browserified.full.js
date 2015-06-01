@@ -9,17 +9,18 @@ var angular = require('angular');
 /* App Module */
 angular.module('gilt-trest',
   [
+    require('./gilt-trest/views/pinned').name,
     require('./gilt-trest/views/store').name,
-    require('./gilt-trest/views/login').name,
+    require('./gilt-trest/views/loginreg').name,
     require('angular-route')
   ])
   .config(['$routeProvider', function($routeProvider) {
-    $routeProvider.otherwise({redirectTo: '/store/women'});
+    $routeProvider.otherwise({redirectTo: '/sales/women'});
   }]);
 
 })();
 
-},{"./gilt-trest/views/login":9,"./gilt-trest/views/store":10,"angular":5,"angular-route":3}],2:[function(require,module,exports){
+},{"./gilt-trest/views/loginreg":8,"./gilt-trest/views/pinned":9,"./gilt-trest/views/store":10,"angular":5,"angular-route":3}],2:[function(require,module,exports){
 /**
  * @license AngularJS v1.4.0
  * (c) 2010-2015 Google, Inc. http://angularjs.org
@@ -29164,22 +29165,24 @@ var saleUrlBase = '/sales';
 
 module.exports = angular.module('request', [])
   .service('apiRequest', function($http, $log, $location) {
-    $http.defaults.headers.common.username = 'kyle';
+
     function login (userForm) {
       var url = userUrlBase + '/login';
 
       return $http({
         method: 'POST',
         url : url,
-        body : userForm
-      })
-      .success(function (resp) {
+        data : userForm
+      }).
+      success(function (resp, status, headers, config) {
         $log.debug(resp.data);
-        $http.defaults.headers.common.username = resp.data.username;
-        $location.path('/sales/women');
-      })
-      .error(function (error) {
+        $http.defaults.headers.common.username = resp.username;
+        return saleUrlBase + '/women';
+      }).
+      error(function (error, status, headers, config) {
         $log.debug(error);
+        $http.defaults.headers.common.username = undefined;
+        return error;
       });
     }
 
@@ -29189,28 +29192,40 @@ module.exports = angular.module('request', [])
       return $http({
         method: 'POST',
         url : url,
-        body : userObject
-      })
-      .success(function (resp) {
+        data : userObject
+      }).
+      success(function (resp, status, headers, config) {
         $log.debug(resp.data);
-        $http.defaults.headers.common.username = resp.data.username;
-        $location.path(saleUrlBase + '/women');
+        $http.defaults.headers.common.username = resp.username;
+        return saleUrlBase + '/women';
+      }).
+      error(function (error, status, headers, config) {
+        $log.debug(error);
+        return error;
       });
     }
 
     function storeView (storeKey) {
       var url = saleUrlBase + '/' + storeKey;
 
+      $http.defaults.headers.common.username = 'kyle';
+
       return $http({
         method: 'GET',
         url : url
-      })
-      .success(function (resp) {
+      }).
+      success(function (resp, status, headers, config) {
         $log.debug(resp);
         return resp.sales;
-      })
-      .error(function (error) {
+      }).
+      error(function (error, status, headers, config) {
         $log.debug(error);
+
+        if (status === 403) {
+          $location.path('/register');
+        }
+
+        return error;
       });
     }
 
@@ -29220,10 +29235,19 @@ module.exports = angular.module('request', [])
       return $http({
         method: 'GET',
         url : url
-      })
-      .success(function (resp) {
+      }).
+      success(function (resp, status, headers, config) {
         $log.debug(resp.sales);
         return resp.sales;
+      }).
+      error(function (error, status, headers, config) {
+        $log.debug(error);
+
+        if (status === 403) {
+          $location.path('/register');
+        }
+
+        return error;
       });
     }
 
@@ -29231,12 +29255,16 @@ module.exports = angular.module('request', [])
       var url = saleUrlBase + '/' + saleKey + '/pin';
 
       return $http({
-        method: 'POST',
+        method: 'GET',
         url : url
-      })
-      .success(function (resp) {
-        $log(resp);
+      }).
+      success(function (resp, status, headers, config) {
+        $log.debug(resp);
         return resp;
+      }).
+      error(function (error, status, headers, config) {
+        $log.debug(error);
+        return error;
       });
     }
 
@@ -29259,15 +29287,17 @@ module.exports = angular.module('request', [])
 
 var angular = require('angular');
 
-var saleController = function saleController ($scope) {
+var saleController = function saleController ($scope, apiRequest) {
   // $scope.sale made avalible by storeController scope
 
-  console.log('saleController:', $scope.sale);
-
-  var sale = $scope.sale;
-
   $scope.pinIt = function pinIt (ev) {
-    alert('Sale: ' + sale.name + ' pinned!');
+
+    apiRequest.pinSale(this.sale.sale_key).then(
+    function successFn (saleResp) {
+      alert('Success! Added ' + saleResp.data.name + ' to your pin list!');
+    }, function errorFn (error) {
+      // TODO: Add error handling.
+    });
   };
 };
 
@@ -29282,54 +29312,52 @@ var saleDirective = function saleDirective () {
   };
 };
 
-module.exports = angular.module('sale', [])
+module.exports = angular.module('sale', [require('../services/requests').name])
 
-.controller('saleCtrl', ['$scope', saleController])
+.controller('saleCtrl', ['$scope', 'apiRequest', saleController])
 
 .directive('sale', saleDirective);
 
 })();
 
-},{"angular":5}],8:[function(require,module,exports){
+},{"../services/requests":6,"angular":5}],8:[function(require,module,exports){
 (function () {
 
 'use strict';
 
 var angular = require('angular');
 
-var saleCollectionDirective = function saleCollectionDirective () {
-  return {
-    restrict: 'E',
-    controller: 'saleCollectionCtrl',
-    scope: {
-      saleCollection: '='
-    },
-    templateUrl : '/assets/templates/directive_partials/sale_list.html'
+var loginController = function loginController ($scope, $location, apiRequest) {
+  $scope.user = {'username' : undefined};
+
+  $scope.login = function register ($ev) {
+    $ev.preventDefault();
+    // NOTE: this == $scope
+
+    apiRequest.login($scope.user).
+    then(function successFn (nextUrl) {
+      $location.path(nextUrl);
+    }, function errorFn (error) {
+      // TODO: add error handling
+    });
   };
+
 };
 
-var saleCollectionController = function saleCollectionController ($scope) {
-	console.log('saleCollectionCtrl: ', $scope.saleCollection);
-};
+var registerController = function registerController ($scope, $location, apiRequest) {
+  $scope.user = {'username' : undefined, 'email' : undefined };
 
-module.exports = angular.module('saleCollection', [require('./sale').name])
+  $scope.register = function register ($ev) {
+    $ev.preventDefault();
+    // NOTE: this == $scope
 
-.controller('saleCollectionCtrl', ['$scope', saleCollectionController])
-
-.directive('saleCollection', saleCollectionDirective);
-
-})();
-
-},{"./sale":7,"angular":5}],9:[function(require,module,exports){
-(function () {
-
-'use strict';
-
-var angular = require('angular');
-
-var loginController = function loginController ($scope, apiRequest) {
-  console.log('login controller');
-  apiRequest.login({'username':'kyle', 'email':'kdorman@gilt.com'});
+    apiRequest.register($scope.user).
+    then(function success (nextUrl) {
+      $location.path(nextUrl);
+    }, function errorFn (error) {
+      // TODO: add error handling
+    });
+  };
 };
 
 module.exports = angular.module('login', [
@@ -29337,47 +29365,88 @@ module.exports = angular.module('login', [
 	require('../services/requests').name
 ])
 
-.controller('loginCtrl', ['$scope', 'apiRequest', loginController])
+.controller('loginCtrl', ['$scope', '$location', 'apiRequest', loginController])
+.controller('registerCtrl', ['$scope', '$location', 'apiRequest', registerController])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/login', {
-    templateUrl: 'assets//templates/views/login.html',
+    templateUrl: 'assets/templates/views/login.html',
     controller: 'loginCtrl'
+  }).when('/register', {
+    templateUrl: 'assets/templates/views/register.html',
+    controller: 'registerCtrl'
   });
 }]);
 
 })();
 
-},{"../services/requests":6,"angular":5,"angular-route":3}],10:[function(require,module,exports){
+},{"../services/requests":6,"angular":5,"angular-route":3}],9:[function(require,module,exports){
 (function () {
 
 'use strict';
 
 var angular = require('angular');
 
-// var data = require('../viewModels/data');
+var pinnedController = function pinnedController ($scope, apiRequest) {
+  apiRequest.pinList().then(function (data) {
+    $scope.saleCollection = data.data.sales;
+  });
+
+  $scope.activeFilter = undefined;
+
+  $scope.customFilter = function customFilter (sale) {
+    return $scope.activeFilter === undefined || sale.store === $scope.activeFilter;
+  };
+
+  $scope.setFilterVal = function setFilterVal ($ev, val) {
+    $ev.preventDefault();
+
+    $scope.activeFilter = val;
+  };
+};
+
+module.exports = angular.module('pinned', [
+  require('angular-route'),
+  require('../services/requests').name,
+  require('../viewModels/sale').name
+])
+
+.controller('pinnedController', ['$scope', 'apiRequest', pinnedController])
+
+.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/sales/pinned', {
+    templateUrl: 'assets/templates/views/pinned.html',
+    controller: 'pinnedController'
+  });
+}]);
+
+})();
+
+},{"../services/requests":6,"../viewModels/sale":7,"angular":5,"angular-route":3}],10:[function(require,module,exports){
+(function () {
+
+'use strict';
+
+var angular = require('angular');
 
 var storeController = function storeController ($scope, $routeParams, apiRequest) {
   $scope.storeKey = $routeParams.storeKey;
 
-  apiRequest.storeView($scope.storeKey).then(function (data) {
-  	$scope.saleCollection = data;
-    console.log('storeController: ', $scope.saleCollection);
+  apiRequest.storeView($scope.storeKey).then(function (resp) {
+  	$scope.saleCollection = resp.data.sales;
   });
-
-  // $scope.saleCollection = data;
 };
 
 module.exports = angular.module('store', [
 	require('angular-route'),
 	require('../services/requests').name,
-	require('../viewModels/saleCollection').name
+	require('../viewModels/sale').name
 ])
 
 .controller('storeController', ['$scope', '$routeParams', 'apiRequest', storeController])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/store/:storeKey', {
+  $routeProvider.when('/sales/:storeKey', {
     templateUrl: 'assets/templates/views/store.html',
     controller: 'storeController'
   });
@@ -29385,4 +29454,4 @@ module.exports = angular.module('store', [
 
 })();
 
-},{"../services/requests":6,"../viewModels/saleCollection":8,"angular":5,"angular-route":3}]},{},[1]);
+},{"../services/requests":6,"../viewModels/sale":7,"angular":5,"angular-route":3}]},{},[1]);

@@ -4,29 +4,24 @@
 
 var angular = require('angular');
 
-// var data = require('../viewModels/data');
-
 var storeController = function storeController ($scope, $routeParams, apiRequest) {
   $scope.storeKey = $routeParams.storeKey;
 
-  apiRequest.storeView($scope.storeKey).then(function (data) {
-  	$scope.saleCollection = data;
-    console.log('storeController: ', $scope.saleCollection);
+  apiRequest.storeView($scope.storeKey).then(function (resp) {
+  	$scope.saleCollection = resp.data.sales;
   });
-
-  // $scope.saleCollection = data;
 };
 
 module.exports = angular.module('store', [
 	require('angular-route'),
 	require('../services/requests').name,
-	require('../viewModels/saleCollection').name
+	require('../viewModels/sale').name
 ])
 
 .controller('storeController', ['$scope', '$routeParams', 'apiRequest', storeController])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/store/:storeKey', {
+  $routeProvider.when('/sales/:storeKey', {
     templateUrl: 'assets/templates/views/store.html',
     controller: 'storeController'
   });
