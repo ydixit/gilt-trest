@@ -1,3 +1,7 @@
+/*global require */
+
+'use strict';
+
 var gulp  = require('gulp');
 
 var JS_SOURCE_FILES = require('../config').js.JS_SOURCE_FILES;

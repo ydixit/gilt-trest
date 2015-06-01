@@ -1,3 +1,7 @@
+/*global module */
+
+'use strict';
+
 var MODULE_NAME = 'gilt-trest';
 
 module.exports = {

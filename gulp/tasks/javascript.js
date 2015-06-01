@@ -1,3 +1,4 @@
+/*global require  */
 /**
  All the Javascript Tasks:
 
@@ -7,24 +8,23 @@
 
 */
 
+'use strict';
+
 var gulp  = require('gulp');
 
 var browserify = require('browserify');
-var buffer = require('vinyl-buffer');
 var concat = require('gulp-concat');
 var debug = require('gulp-debug');
 var jshint  = require('gulp-jshint');
-var print = require('gulp-print');
+var gulpprint = require('gulp-print');
 var rename = require('gulp-rename');
 var source = require('vinyl-source-stream');
-var transform = require('vinyl-transform');
 var uglify = require('gulp-uglify');
 var streamify = require('gulp-streamify');
 
 var configObject = require('../config');
 
 var JS_BASE_FILE = configObject.js.JS_BASE_FILE;
-var JS_BASE_MODULE_FILE = configObject.js.JS_BASE_MODULE_FILE;
 var JS_DEST_BROWSERIFIED_FILE = configObject.js.JS_DEST_BROWSERIFIED_FILE;
 var JS_DEST_BROWSERIFIED_MINIFIED_FILE = configObject.js.JS_DEST_BROWSERIFIED_MINIFIED_FILE;
 var JS_DEST_FULL_FILE = configObject.js.JS_DEST_FULL_FILE;
@@ -56,10 +56,10 @@ gulp.task('bundle-browserified-js', function() {
 
   return bundleStream
     .pipe(source(JS_BASE_FILE))
-    .pipe(print())
+    .pipe(gulpprint())
     .pipe(rename(JS_DEST_BROWSERIFIED_FILE))
     .pipe(gulp.dest(JS_DEST_FOLDER))
-    .pipe(print());
+    .pipe(gulpprint());
 });
 
 
@@ -69,11 +69,11 @@ gulp.task('bundle-browserified-js', function() {
  */
 gulp.task('bundle-modularized-js', function () {
   return gulp.src(SOURCE_MAP)
-    .pipe(print())
+    .pipe(gulpprint())
     .pipe(concat(JS_DEST_FULL_FILE, {newLine: ';'}))
     .pipe(rename(JS_DEST_FULL_FILE))
     .pipe(gulp.dest(JS_DEST_FOLDER))
-    .pipe(print());
+    .pipe(gulpprint());
 });
 
 
@@ -85,11 +85,11 @@ gulp.task('uglify-browserified-js', function() {
 
   return bundleStream
     .pipe(source(JS_BASE_FILE))
-    .pipe(print())
+    .pipe(gulpprint())
     .pipe(streamify(uglify()))
     .pipe(rename(JS_DEST_BROWSERIFIED_MINIFIED_FILE))
     .pipe(gulp.dest(JS_DEST_FOLDER))
-    .pipe(print());
+    .pipe(gulpprint());
 });
 
 
@@ -98,12 +98,12 @@ gulp.task('uglify-browserified-js', function() {
  */
 gulp.task('uglify-modularized-js', function() {
   return gulp.src(SOURCE_MAP)
-    .pipe(print())
+    .pipe(gulpprint())
     .pipe(concat(JS_BASE_FILE, {newLine: ';'}))
     .pipe(uglify())
     .pipe(rename(JS_DEST_MINIFIED_FILE))
     .pipe(gulp.dest(JS_DEST_FOLDER))
-    .pipe(print());
+    .pipe(gulpprint());
 });
 
 

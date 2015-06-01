@@ -1,4 +1,5 @@
-/*global angular: false, jsRoutes: false*/
+/*global require */
+
 (function () {
 
 'use strict';

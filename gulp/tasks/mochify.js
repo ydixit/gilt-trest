@@ -1,6 +1,10 @@
+/*global require */
+
+'use strict';
+
 var gulp = require('gulp');
 var mochify = require('mochify');
-var phantomjs = require('phantomjs');
+var phantomjs = require('phantomjs'); // do we need this?
 
 var SOURCE_FILES = require('../config').spec.SOURCE_FILES;
 var PHANTOMJS_LOCATION = './node_modules/.bin/phantomjs';
