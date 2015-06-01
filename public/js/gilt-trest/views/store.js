@@ -7,15 +7,12 @@ var angular = require('angular');
 var storeController = function storeController ($scope, $routeParams, apiRequest) {
   $scope.storeKey = $routeParams.storeKey;
 
-  apiRequest.storeView($scope.storeKey).then(function (resp) {
-  	$scope.saleCollection = resp.data.sales;
-  });
+  $scope.saleCollection = apiRequest.storeView('blah');
 };
 
 module.exports = angular.module('store', [
-	require('angular-route'),
-	require('../services/requests').name,
-	require('../viewModels/sale').name
+  require('angular-route'),
+  require('../services/requests').name
 ])
 
 .controller('storeController', ['$scope', '$routeParams', 'apiRequest', storeController])

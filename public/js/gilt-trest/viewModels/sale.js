@@ -8,13 +8,7 @@ var saleController = function saleController ($scope, apiRequest) {
   // $scope.sale made avalible by storeController scope
 
   $scope.pinIt = function pinIt (ev) {
-
-    apiRequest.pinSale(this.sale.sale_key).then(
-      function successFn (saleResp) {
-        alert('Success! Added ' + saleResp.data.name + ' to your pin list!');
-      }, function errorFn (error) {
-        // TODO: Add error handling.
-      });
+    alert('you tried to pin sale.');
   };
 };
 
@@ -29,9 +23,9 @@ var saleDirective = function saleDirective () {
   };
 };
 
-module.exports = angular.module('sale', [require('../services/requests').name])
+module.exports = angular.module('sale', [/* dependency modules go here*/])
 
-.controller('saleCtrl', ['$scope', 'apiRequest', saleController])
+.controller('saleCtrl', ['$scope', saleController])
 
 .directive('sale', saleDirective);
 
