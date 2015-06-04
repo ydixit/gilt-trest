@@ -6,6 +6,9 @@
   <li><a href="#" ng-click="setFilterVal($event, 'kids');">Children</a></li> |
   <li><a href="#" ng-click="setFilterVal($event);">Clear Filter</a></li>
 </ul>
-<p>Display sales here!</p>
-<p>Include js filters</p>
+<ul class="sale-list">
+  <li class="sale-list-item" ng-repeat="sale in saleCollection | filter: customFilter">
+    <sale sale="sale" class="sale-container"></sale>
+  <li>
+</ul>
 

@@ -1,3 +1,7 @@
 <h1>Welcome to {{storeKey}}</h1>
-<p>Display Sales Here!</p>
+<ul class="sale-list">
+  <li class="sale-list-item" ng-repeat="sale in saleCollection">
+    <sale sale="sale" class="sale-container"></sale>
+  <li>
+</ul>
 
