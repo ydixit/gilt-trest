@@ -29231,10 +29231,51 @@ module.exports = angular.module('request', [])
     }
 
     function pinList () {
+      var url = saleUrlBase + '/pinned';
 
+      $http.defaults.headers.common.username = 'kyle';
+
+      return $http({
+        method: 'GET',
+        url : url
+      }).
+      success(function (resp, status, headers, config) {
+        $log.debug(resp);
+        return resp.sales;
+      }).
+      error(function (error, status, headers, config) {
+        $log.debug(error);
+
+        if (status === 403) {
+          $location.path('/register');
+        }
+
+        return error;
+      });
     }
 
     function pinSale (saleKey) {
+      var url = saleUrlBase + '/' + saleKey + '/pin';
+
+      $http.defaults.headers.common.username = 'kyle';
+
+      return $http({
+        method: 'GET',
+        url : url
+      }).
+      success(function (resp, status, headers, config) {
+        $log.debug(resp);
+        return resp;
+      }).
+      error(function (error, status, headers, config) {
+        $log.debug(error);
+
+        if (status === 403) {
+          $location.path('/register');
+        }
+
+        return error;
+      });
 
     }
 
@@ -29260,8 +29301,12 @@ var angular = require('angular');
 var saleController = function saleController ($scope, apiRequest) {
   // $scope.sale made avalible by storeController scope
 
+  $scope.pin = 'PIN';
+
   $scope.pinIt = function pinIt (ev) {
-    alert('Impliment pin method!');
+      apiRequest.pinSale($scope.sale.sale_key).then(function (resp) {
+          $scope.pin = 'PINNED';
+      });
   };
 };
 
@@ -29351,33 +29396,52 @@ module.exports = angular.module('login', [
 
 var angular = require('angular');
 
-var pinnedController = function pinnedController ($scope) {
+var pinnedController = function pinnedController ($scope, apiRequest) {
+
+  var filter = 'none';
+  apiRequest.pinList().then(function (resp) {
+  	$scope.saleCollection = resp.data.sales;
+  });
 
   $scope.customFilter = function customFilter (sale) {
-
+  	//debugger;
+  	if (filter === 'none') { return true; }
+  	else if (filter === sale.store) { return true; }
+  	else { return false; }
   };
 
   $scope.setFilterVal = function setFilterVal ($ev, val) {
-
+  	$ev.preventDefault();
+  	filter = val;
   };
+
 };
 
 module.exports = angular.module('pinned', [
-
+	require('angular-route'),
+	require('../services/requests').name,
+	require('../viewModels/sale').name
 ])
 
-.controller('pinnedController', ['$scope', pinnedController]);
+.controller('pinnedController', ['$scope', 'apiRequest', pinnedController])
+
+.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/sales/pinned', {
+    templateUrl: 'assets/templates/views/pinned.html',
+    controller: 'pinnedController'
+  });
+}]);
 
 })();
 
-},{"angular":5}],10:[function(require,module,exports){
+},{"../services/requests":6,"../viewModels/sale":7,"angular":5,"angular-route":3}],10:[function(require,module,exports){
 (function () {
 
 'use strict';
 
 var angular = require('angular');
 
-var storeController = function storeController ($scope, $routeParams, apiRequest) {
+var controller = function storeController ($scope, $routeParams, apiRequest) {
   $scope.storeKey = $routeParams.storeKey;
 
   apiRequest.storeView($scope.storeKey).then(function (resp) {
@@ -29391,7 +29455,7 @@ module.exports = angular.module('store', [
 	require('../viewModels/sale').name
 ])
 
-.controller('storeController', ['$scope', '$routeParams', 'apiRequest', storeController])
+.controller('storeController', ['$scope', '$routeParams', 'apiRequest', controller])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/sales/:storeKey', {
