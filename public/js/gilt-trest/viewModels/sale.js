@@ -7,9 +7,13 @@ var angular = require('angular');
 var saleController = function saleController ($scope, apiRequest) {
   // $scope.sale made avalible by storeController scope
 
+  $scope.pin = 'PIN';
+
   $scope.pinIt = function pinIt (ev) {
-    alert('Impliment pin method!');
-  };
+      apiRequest.pinSale($scope.sale.sale_key).then(function (resp) {
+          $scope.pin = 'PINNED';
+      });
+  }
 };
 
 var saleDirective = function saleDirective () {
