@@ -76,6 +76,27 @@ module.exports = angular.module('request', [])
     }
 
     function pinSale (saleKey) {
+      var url = saleUrlBase + '/' + saleKey + '/pin';
+
+      $http.defaults.headers.common.username = 'kyle';
+
+      return $http({
+        method: 'GET',
+        url : url
+      }).
+      success(function (resp, status, headers, config) {
+        $log.debug(resp);
+        return resp;
+      }).
+      error(function (error, status, headers, config) {
+        $log.debug(error);
+
+        if (status === 403) {
+          $location.path('/register');
+        }
+
+        return error;
+      });
 
     }
 
