@@ -13,7 +13,7 @@ var saleController = function saleController ($scope, apiRequest) {
       apiRequest.pinSale($scope.sale.sale_key).then(function (resp) {
           $scope.pin = 'PINNED';
       });
-  }
+  };
 };
 
 var saleDirective = function saleDirective () {

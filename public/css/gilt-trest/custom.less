@@ -37,12 +37,31 @@ body {
 .sale-container {
   height: 375px;
   width: 375px;
-  text-align: center;
+  text-align: center; 
+}
+
+img:hover {
+  opacity: 0.4;
 }
 
 .sale-name  {
   color: black;
 }
+
+.sale-des {
+  display: none;
+  color: black;
+  position: absolute;
+}
+
+.sale-image:hover .sale-des {
+  display: inline;
+  postion: absolute;
+  align: center;
+  left: 10%;
+  top: 25%;
+}
+
 
 .pin-active {
   background-color: gray;
