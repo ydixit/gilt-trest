@@ -48,7 +48,7 @@ module.exports = angular.module('request', [])
     }
 
     function storeView (storeKey) {
-      var url = saleUrlBase + '/' + storeKey;
+      var url = saleUrlBase + '/' + storeKey;  //storeKey is men, women, kids, etc
 
       $http.defaults.headers.common.username = 'kyle';
 
@@ -72,11 +72,38 @@ module.exports = angular.module('request', [])
     }
 
     function pinList () {
+      //US
+      //request to the server for the list of sales that you already have pinned
+      //similar to storeview
+      var url = saleUrlBase + '/pinned';
+
+      $http.defaults.headers.common.username = 'kyle';
+
+      return $http({
+        method: 'GET',
+        url : url
+      }).
+      success(function (resp, status, headers, config) {
+        $log.debug(resp);
+        return resp.sales;
+      }).
+      error(function (error, status, headers, config) {
+        $log.debug(error);
+
+        if (status === 403) {
+          $location.path('/register');
+        }
+
+        return error;
+      });
+
+
+
 
     }
 
     function pinSale (saleKey) {
-
+      //THEM
     }
 
     return {

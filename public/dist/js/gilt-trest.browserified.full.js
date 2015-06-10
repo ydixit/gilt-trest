@@ -19,6 +19,8 @@ angular.module('gilt-trest',
     $routeProvider.otherwise({redirectTo: '/sales/women'});
   }]);
 
+  
+
 })();
 
 },{"./gilt-trest/views/loginreg":8,"./gilt-trest/views/pinned":9,"./gilt-trest/views/store":10,"angular":5,"angular-route":3}],2:[function(require,module,exports){
@@ -29207,7 +29209,7 @@ module.exports = angular.module('request', [])
     }
 
     function storeView (storeKey) {
-      var url = saleUrlBase + '/' + storeKey;
+      var url = saleUrlBase + '/' + storeKey;  //storeKey is men, women, kids, etc
 
       $http.defaults.headers.common.username = 'kyle';
 
@@ -29231,11 +29233,38 @@ module.exports = angular.module('request', [])
     }
 
     function pinList () {
+      //US
+      //request to the server for the list of sales that you already have pinned
+      //similar to storeview
+      var url = saleUrlBase + '/pinned';
+
+      $http.defaults.headers.common.username = 'kyle';
+
+      return $http({
+        method: 'GET',
+        url : url
+      }).
+      success(function (resp, status, headers, config) {
+        $log.debug(resp);
+        return resp.sales;
+      }).
+      error(function (error, status, headers, config) {
+        $log.debug(error);
+
+        if (status === 403) {
+          $location.path('/register');
+        }
+
+        return error;
+      });
+
+
+
 
     }
 
     function pinSale (saleKey) {
-
+      //THEM
     }
 
     return {
@@ -29351,7 +29380,7 @@ module.exports = angular.module('login', [
 
 var angular = require('angular');
 
-var pinnedController = function pinnedController ($scope) {
+var pinnedController = function pinnedController ($scope, apiRequest) {
 
   $scope.customFilter = function customFilter (sale) {
 
@@ -29360,17 +29389,29 @@ var pinnedController = function pinnedController ($scope) {
   $scope.setFilterVal = function setFilterVal ($ev, val) {
 
   };
+
+  apiRequest.pinList().then(function (resp) {
+  	$scope.saleCollection = resp.data.sales;
+  });
 };
 
 module.exports = angular.module('pinned', [
-
+	require('angular-route'),
+	require('../services/requests').name,
+	require('../viewModels/sale').name
 ])
 
-.controller('pinnedController', ['$scope', pinnedController]);
+.controller('pinnedController', ['$scope', 'apiRequest', pinnedController])
+
+.config(['$routeProvider', function($routeProvider) {
+  $routeProvider.when('/sales/pinned', {
+    templateUrl: 'assets/templates/views/pinned.html',
+    controller: 'pinnedController'
+  });
+}]);
 
 })();
-
-},{"angular":5}],10:[function(require,module,exports){
+},{"../services/requests":6,"../viewModels/sale":7,"angular":5,"angular-route":3}],10:[function(require,module,exports){
 (function () {
 
 'use strict';
