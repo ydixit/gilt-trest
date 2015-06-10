@@ -18,4 +18,6 @@ angular.module('gilt-trest',
     $routeProvider.otherwise({redirectTo: '/sales/women'});
   }]);
 
+  
+
 })();

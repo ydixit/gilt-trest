@@ -7,7 +7,8 @@
   <li><a href="#" ng-click="setFilterVal($event);">Clear Filter</a></li>
 </ul>
 <ul class="sale-list">
-  <li class="sale-list-item" ng-repeat="sale in saleCollection | filter: customFilter">
+  <!--<li class="sale-list-item" ng-repeat="sale in saleCollection | filter: customFilter">-->
+  <li class="sale-list-item" ng-repeat="sale in saleCollection">
     <sale sale="sale" class="sale-container"></sale>
   <li>
 </ul>
