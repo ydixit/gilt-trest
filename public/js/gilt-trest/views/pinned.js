@@ -12,7 +12,6 @@ var pinnedController = function pinnedController ($scope, apiRequest) {
   });
 
   $scope.customFilter = function customFilter (sale) {
-  	//debugger;
   	if (filter === 'none') { return true; }
   	else if (filter === sale.store) { return true; }
   	else { return false; }
