@@ -4,7 +4,7 @@
   <li><a href="#" ng-click="setFilterVal($event, 'women');">Women</a></li> |
   <li><a href="#" ng-click="setFilterVal($event, 'home');">Home</a></li> |
   <li><a href="#" ng-click="setFilterVal($event, 'kids');">Children</a></li> |
-  <li><a href="#" ng-click="setFilterVal($event);">Clear Filter</a></li>
+  <li><a href="#" ng-click="setFilterVal($event, 'none');">Clear Filter</a></li>
 </ul>
 <ul class="sale-list">
   <li class="sale-list-item" ng-repeat="sale in saleCollection | filter: customFilter">
