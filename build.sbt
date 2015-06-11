@@ -10,7 +10,8 @@ dockerRepository := Some("teamrookie")
 maintainer in Docker := "team-rookie <team-rookie@gilt.com>"
 dockerBaseImage := "java:8-jre"
 dockerExposedPorts := Seq(9000)
-
+version := "git describe --tags --dirty --always".!!
+  .stripPrefix("v").trim
 
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
