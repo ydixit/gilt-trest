@@ -40,6 +40,33 @@ body {
   text-align: center; 
 }
 
+.sale-image {
+  position: relative;
+}
+
+.sale-image-container {
+  text-align: center;
+}
+
+.sale-name-block {
+  position: absolute;
+  bottom: 5.5%;
+  width: 90%;
+  height: 15%;
+  align: center;
+  left: 18px;
+  right: 5%;
+  background: rgb(0,0,0);
+  background: rgba(0,0,0,0.8);
+}
+
+.sale-name {
+  color: white;
+  font: bold 20px/26px;
+  padding: 30% 5%;
+  right: 5%;
+}
+
 .sale-des {
   display: none;
   color: black;
@@ -55,8 +82,13 @@ body {
   right: 10%;
 }
 
-.sale-image-container:hover .sale-image{
-  opacity: 0.4;
+.sale-image-container:hover .sale-image {
+  opacity: 0.3;
+}
+
+.sale-image-container:hover .sale-name-block {
+  background: rgb(218,165,32, 0.7);
+
 }
 
 .pin-active {

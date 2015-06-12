@@ -3,7 +3,10 @@
   <div class="sale-image-container">
     <img class="sale-image" src="{{sale.image_urls['338x343'][0].url}}">
     <p class="sale-des"> {{ sale.description }} </p>
-    <p class="sale-name"> {{ sale.name }} </p>
+    <h4 class="sale-name-block">
+        <p><p/>
+        <span class="sale-name"> {{ sale.name }} </span>
+     </h4>
   </div>
 
   <a class="pin-btn btn btn-small btn-info" ng-click="pinIt()" ng-model="pin" ng-class="{'pin-active': pin === 'PINNED'}"> {{ pin }} </a>
