@@ -10,11 +10,11 @@ import scala.concurrent.Future
  * Rudimentary in-memory datastore with futures interface
  */
 object PinnedSalesManager {
-  val allPinnedSales = mutable.Map[String, mutable.MutableList[SaleDetail]]()
+  val allPinnedSales = mutable.Map[String, mutable.Set[SaleDetail]]()
 
   def pinSale(username:String, sale: SaleDetail): Future[SaleDetail] = {
     if (!allPinnedSales.contains(username)) {
-      allPinnedSales.update(username, mutable.MutableList[SaleDetail](sale))
+      allPinnedSales.update(username, mutable.Set[SaleDetail](sale))
     } else {
       val userPinnedSales = allPinnedSales.get(username).get
       userPinnedSales += sale
@@ -24,7 +24,7 @@ object PinnedSalesManager {
   }
 
   def getPinnedSales(username: String): Future[com.gilt.public.api.models.SaleList] = {
-    val userPinnedSales = allPinnedSales.get(username).getOrElse(mutable.MutableList[SaleDetail]())
-    Future.successful(SaleList(userPinnedSales))
+    val userPinnedSales = allPinnedSales.get(username).getOrElse(mutable.Set[SaleDetail]())
+    Future.successful(SaleList(userPinnedSales.toSeq))
   }
 }
