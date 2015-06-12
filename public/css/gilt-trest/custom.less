@@ -40,21 +40,13 @@ body {
   text-align: center; 
 }
 
-img:hover {
-  opacity: 0.4;
-}
-
-.sale-name  {
-  color: black;
-}
-
 .sale-des {
   display: none;
   color: black;
   position: absolute;
 }
 
-.sale-image:hover .sale-des {
+.sale-image-container:hover .sale-des {
   display: inline;
   postion: absolute;
   align: center;
@@ -62,6 +54,9 @@ img:hover {
   top: 25%;
 }
 
+.sale-image-container:hover .sale-image{
+  opacity: 0.4;
+}
 
 .pin-active {
   background-color: gray;
